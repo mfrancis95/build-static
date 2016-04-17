@@ -15,7 +15,7 @@ function build(depth) {
                 var files = Array.from(walk("dist", depth));
                 var cwd = process.cwd();
                 var promises = [];
-                for (var info of require("./build.json")) {
+                for (var info of JSON.parse(fs.readFileSync("build.json").toString())) {
                     for (var file of files) {
                         if (file.match(info.pattern)) {
                             promises.push(transformer(cwd, file, info));
