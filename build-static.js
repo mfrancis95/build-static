@@ -5,14 +5,14 @@ var fs = require("fs");
 var inlinify = require("inlinify");
 var minify = require("minify");
 
-function build(depth) {
+function build(outputFolder, depth) {
     return new Promise((resolve, reject) => {
-        exec("rm -r dist; cp -r build dist", error => {
+        exec(`rm -r ${outputFolder}; cp -r build ${outputFolder}`, error => {
             if (error) {
                 reject(error);
             }
             else {
-                var files = Array.from(walk("dist", depth));
+                var files = Array.from(walk(outputFolder, depth));
                 var cwd = process.cwd();
                 var promises = [];
                 for (var info of JSON.parse(fs.readFileSync("build.json").toString())) {
@@ -74,4 +74,4 @@ function transformMinify(data, css) {
     return css ? minify.css(data) : minify.js(data);
 }
 
-build(process.argv[2]).then(() => console.log("Done building."), console.log);
+build(process.argv[2], process.argv[3]).then(() => console.log("Done building."), console.log);
